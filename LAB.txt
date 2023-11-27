@@ -1,0 +1,135 @@
+*****Experiment 1a*****
+Aim : To find the Carrier to Interface ratio in directional antenna system of 3-sector and 6-sector case:
+Apparatus:
+MATLAB 
+Program Code:
+clc;
+clear all;
+close all;
+Y=4; % path loss exponent
+K=7
+q= sqrt (3*K)
+CI =(q^-Y+(q+0.7)^-Y)^( -1) % C/ I for 3-sector case
+CIdB =10* log10 (CI);
+disp('cochannel interference ratio C/ I in dB for K=7 of 3-sector case :')
+disp(CIdB)% , 
+CI1 =((q+0.7)^-Y)^( -1) % C/ I for 6-sector case
+CI1dB =10* log10 (CI1);
+disp('cochannel interference ratio C/ I in dB for K=7 of 6-sector case :')
+disp(CI1dB) 
+
+*****Experiment 2a*****
+Analysis of Free Space Propagation Path Loss
+Aim : To analyze the free space path loss
+Apparatus:
+MATLAB 
+Program Code:
+clc;
+clear all;
+fc =900*10^6;
+r =1000;
+c =3*10^8;
+Yc=c/fc;
+ l =((4*pi*r)/Yc)^2 ;
+Lpf =10* log10 (l);
+disp('free space path loss in dB ')
+disp(Lpf)
+
+*****Experiment 2b*****
+Analysis of Propagation Path Loss Using Two Ray Model
+AIM : To analyze the propagation path loss using two-ray model
+Apparatus:
+MATLAB 
+Program Code:
+clc;
+clear all;
+close all;
+fcMhz =800;
+ht =30;
+hr =2;
+r =10*10^3;
+rkm =10;
+LpmdB =40* log10 (r) -20* log10 (ht*hr);%path loss using  2 ray model in dB
+LpfdB =32.44+20* log10 (rkm) +20* log10 ( fcMhz ) ;%// path loss using free space model
+disp('path l oss using 2 ray model=')
+disp(LpmdB)
+disp('path los s using free space model=')
+disp(LpmdB)
+ 
+*****Experiment 3******
+Analyze the AT COMMANDS of 4G LTE Smart Phone
+Aim : To study and perform AT commands using 4G VoLTE Smart Phone 
+Apparatus : 
+1.	4G LTE Smart Phone TechBook 
+2.	SIM card(s) of any 4G service provider supporting 4G LTE frequency band 
+3.	Power Supply for Scientech 2139 with Mains Cord
+Procedure: 
+1.	Connect Scientech 2139 with PC using USB Cable and check in Device Manager, Hardware should be detected.
+2.	Go to mobile phone “Setting” and then in “Developer Options” check “USB debugging” option should be enable.
+3.	After that click on Scientech 2139  icon on desktop to run software.
+4.	If everything is ok then Scientech 2139 Understanding 4G VoLTE Smart Phone window will display when software start.
+5.	Run Basic Set of AT Commands and Check Output on Right side in “Response window”
+6.	7. List of Supported Commands are:
+
+S.No	Command Format	Response	                         Description
+1	AT	           OK	                                 Test Command
+2	ATD95XXXXXX99;	   OK	                                 To dial a Number
+3	ATA	           OK	                                 Attend Voice Call
+4	AT+CHUP	           OK	                                 Voice Call End
+5	ATI	           Manufacturer: Motorola Mobility       Request Identification Information of Mobile
+                           Model: 4108
+                           Revision: MPSS.JO.2.0.c1.8-00016-
+                           8937_GENNS_PACK-1 1 [Mar 13 2017 23:00:00]
+                           SVN: 05
+                           IMEI: 351898083184319
+                           +GCAP: +CGSM
+                           OK	
+6	AT+GMI	           MOtorolo Mobility                     Request Manufacturer ID
+                           OK                                   
+*****HandOff*****
+clc
+clear all;
+hte=150; 
+hre=10; 
+sdA=3;
+sdB=5; 
+noiseA=sdA*randn(1,50);
+noiseB=sdB*randn(1,50);
+disp('uplink freq=835 Mhz')
+disp('downlink freq=880 Mhz')
+disp('urban environment =900 Mhz')
+fc=input(Enter uplink, downlink or urban environment frequency?=')
+for d=1:50
+      LA(d)=(69.55+26.6*log10(fc))-(13.82*log10(hte))-((1.11*log10(fc)-0.7)*(10)+(1.56*log10(fc)- 0.8))+((44.9-6.55*log10(hte))*log10(d));
+      LB(d)=(69.55+26.6*log10(fc))-(13.82*log10(hte))-((1.11*log10(fc)-0.7)*(10)+(1.56*log10(fc)- 0.8))+((44.9-6.55*log10(hte))*log10(51-(d)));
+      LF(d)=32.4+20*log10(fc)+20*log10(d);
+      SrA(d)=60-LA(d); % Received power at A without noise
+      SrB(d)=60-LB(d); % Received power at B without noise
+      PrA(d)=60-LA(d)+noiseA(d);%Received power at A with Gaussian noise sd=3
+      PrB(d)=60-LB(d)+noiseB(d);%Received power at B with Gaussian noise sd=5
+end
+figure(1)
+subplot(2,1,1);
+plot (PrA);
+hold on
+plot (PrB,'m');
+axis([0 50 -90 -50]);
+xlabel('distance');
+ylabel('signal strength')
+grid
+subplot(2,1,2);
+plot(SrA);
+hold on
+plot(SrB,'m');
+axis([0 50 -90 -50]);
+xlabel('distance');
+ylabel('signal strength')
+grid
+figure(2)
+plot(LA,'m');
+xlabel('distance');
+ylabel('signal strength')
+hold on
+plot(LF);
+xlabel('distance');
+ylabel('signal strength')
